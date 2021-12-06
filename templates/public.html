@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Demo page</title>
+        <style>
+            main { border: 1px solid #333; }
+        </style>
+    </head>
+    <body>
+        <h1>Global Context Demo</h1>
+        <h2>Inner Template Content</h2>
+        <main>{{ content|safe }}</main>
+        <footer>
+            <h2>Global Context</h2>
+            <p>Page generated in {{ "{:?}μs"|format(context.request_time()) }}</p>
+            <p>Our secret word is <em>{{ context.secret_word }}</em></p>
+        </footer>
+    </body>
+</html>
