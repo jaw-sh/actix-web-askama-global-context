@@ -32,23 +32,21 @@ pub async fn view_index() -> impl Responder {
 mod middleware {
     use actix_web::dev::{forward_ready, Service, ServiceRequest, ServiceResponse, Transform};
     use actix_web::Error;
-    use chrono::prelude::{NaiveDateTime, Utc};
     use std::future::{ready, Ready};
+    use std::time::Instant;
 
     /// Contextual information passed to the page container.
     /// Initialized in Middleware. Passed in a Handler.
     #[derive(Debug, Clone)]
     pub struct Context {
-        pub request_start: NaiveDateTime,
+        pub request_start: Instant,
         pub secret_word: String,
     }
 
     impl Context {
         /// Returns human readable request time in microseconds.
-        pub fn request_time(&self) -> i64 {
-            (Utc::now().naive_utc() - self.request_start)
-                .num_microseconds()
-                .unwrap_or(-1)
+        pub fn request_time(&self) -> u128 {
+            (Instant::now() - self.request_start).as_micros()
         }
     }
 
@@ -93,7 +91,7 @@ mod middleware {
 
             // insert data into extensions if enabled
             httpreq.extensions_mut().insert(Context {
-                request_start: Utc::now().naive_utc(),
+                request_start: Instant::now(),
                 secret_word: "Popsicle".to_owned(),
             });
 
